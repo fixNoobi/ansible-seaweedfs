@@ -1,0 +1,12 @@
+[pgservers]
+pgmaster-stage ansible_ssh_host=192.168.100.101 ansible_user=root
+pgslave-stage ansible_ssh_host=192.168.100.102 ansible_user=root
+
+[pgmasters]
+pgmaster-stage
+
+[pgslaves]
+pgslave-stage
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3

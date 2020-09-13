@@ -1,0 +1,41 @@
+---
+# weed_folder: "/etc/weed"
+
+# weed_master_folder: "/var/seaweedfs/master"
+# weed_data_folder: "/mnt/seaweedfs/data"
+
+# rm -f /etc/systemd/system/swfs-*
+# rm -rf /var/seaweedfs/*
+# rm -rf /opt/seaweedfs/
+
+# rm -f /etc/default/weed
+# rm -fr /etc/weed
+
+- name: Clean {{weed_data_folder}} path
+  file:
+    state: absent
+    path: "{{ weed_data_folder }}/"
+  tags:
+    - prune-all
+  # when: "'prune-all' in ansible_run_tags"
+
+- name: Clean {{weed_master_folder }} path
+  file:
+    state: absent
+    path: "{{ weed_master_folder }}/"
+  tags:
+    - prune-all
+
+- name: Clean {{weed_filer_folder}} path
+  file:
+    state: absent
+    path: "{{ weed_filer_folder }}/"
+  tags:
+    - prune-all
+
+- name: Clean {{weed_folder}} path
+  file:
+    state: absent
+    path: "{{ weed_folder }}/"
+  tags:
+    - prune-all

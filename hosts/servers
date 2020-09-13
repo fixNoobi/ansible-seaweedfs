@@ -1,0 +1,30 @@
+[master]
+srv-stage01
+srv-stage02
+srv-stage03
+
+[volumes]
+srv-stage01	dc=dc1	rack=rack1
+srv-stage02	dc=dc1	rack=rack2
+srv-stage03	dc=dc1	rack=rack3
+
+[filer]
+srv-stage01
+srv-stage02
+srv-stage03
+
+[etcd-master]
+srv-stage01
+srv-stage02
+srv-stage03
+
+#[cron]
+#srv-stage01
+
+[s3]
+srv-stage01
+srv-stage02
+srv-stage03
+
+[all:vars]
+#ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,14 @@
+---
+- name: SeaWeedFS | Remove service swfs-volume | yum
+  file:
+    path: /etc/systemd/system/swfs-volume.service
+    state: absent
+  tags:
+    - prune-all
+  when: "'prune-all' in ansible_run_tags"
+
+- name: SeaWeedFS | Setup service swfs-volume | yum
+  template:
+    src: system/swfs-volume.service.j2
+    dest: "/etc/systemd/system/swfs-volume.service"
+    mode: 0700

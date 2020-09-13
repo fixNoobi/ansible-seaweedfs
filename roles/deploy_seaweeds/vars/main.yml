@@ -1,0 +1,4 @@
+weed_masters_peers: "{% for host in groups[weed_masters_group] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:{{ weed_masters_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+
+weed_etcd_servers: "{% for host in groups[etcd_masters_group] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
+

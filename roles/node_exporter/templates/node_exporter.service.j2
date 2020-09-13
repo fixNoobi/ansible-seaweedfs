@@ -1,0 +1,18 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Prometheus Node Exporter
+After=network.target
+
+[Service]
+Type=simple
+User={{ node_exporter_system_user }}
+Group={{ node_exporter_system_group }}
+EnvironmentFile={{node_exporter_root_dir}}/enviroment.env
+ExecStart={{node_exporter_root_dir}}/node_exporter $OPTIONS
+
+SyslogIdentifier=node_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

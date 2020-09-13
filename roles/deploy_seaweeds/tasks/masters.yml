@@ -1,0 +1,14 @@
+---
+- name: SeaWeedFS | Remove service swfs-master | yum
+  file:
+    path: /etc/systemd/system/swfs-master.service
+    state: absent
+  tags:
+    - prune-all
+  when: "'prune-all' in ansible_run_tags"
+
+- name: SeaWeedFS | Setup service swfs-master | yum
+  template:
+    src: system/swfs-master.service.j2
+    dest: "/etc/systemd/system/swfs-master.service"
+    mode: 0700

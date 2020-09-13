@@ -1,0 +1,34 @@
+---
+postgres_exporter_user: postgres
+postgres_exporter_user_manage: false
+postgres_exporter_group: "{{ postgres_exporter_user }}"
+postgres_exporter_group_manage: false
+
+postgres_exporter_port: ":9187"
+
+postgres_exporter_version: "0.4.7"
+postgres_exporter_checksum: "sha1:fb00839a28ef4cab1f1330f433911dee7f3aa7cc"
+
+postgres_exporter_root_dir: "/etc/postgres_exporter"
+
+postgres_exporter_dist_dir: "/root"
+postgres_exporter_dist: postgres_exporter_v{{ postgres_exporter_version }}_linux-amd64
+postgres_exporter_url: "https://github.com/wrouesnel/postgres_exporter/releases/download/v{{ postgres_exporter_version }}/{{ postgres_exporter_dist }}.tar.gz"
+postgres_exporter_program: "{{ postgres_exporter_root_dir }}/postgres_exporter"
+postgres_exporter_home: "{{ '/var/lib/pgsql' if ansible_os_family ==  'RedHat' else '/var/lib/postgresql' }}"
+postgres_exporter_home_manage: false
+postgres_exporter_datasource: "user=postgres host=/var/run/postgresql/ sslmode=disable"
+postgres_exporter_queries: "queries.yml"
+postgres_exporter_flags:
+  'extend.query-path': "{{ postgres_exporter_root_dir }}/queries.yml"
+  'web.listen-address': "{{ hostvars[inventory_hostname]['ansible_facts']['enp0s8']['ipv4']['address'] }}{{postgres_exporter_port}}"
+
+postgres_exporter_config_file: "{{postgres_exporter_root_dir}}/enviroment.env"
+postgres_exporter_pid_path: "/var/run"
+postgres_exporter_log_path: "/var/log/postgres_exporter"
+
+postgres_exporter_service_manage: true
+postgres_exporter_service_enable: true
+postgres_exporter_service_state: started
+postgres_exporter_service_notify: true
+postgres_exporter_service_mgr: systemd

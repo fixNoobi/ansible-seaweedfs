@@ -1,0 +1,7 @@
+---
+- name: SeaWeedFS | Status services | yum
+  shell: systemctl status {{item}} 
+  with_items: "{{name_services}}"
+  tags:
+    - reload
+

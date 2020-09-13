@@ -1,0 +1,11 @@
+[Unit]
+Description=weed volume server of cluster
+ 
+[Service]
+EnvironmentFile=/etc/default/weed
+ExecStart=/usr/local/bin/weed volume $WEED_VOLUMES_OPTS
+Restart=always
+RestartSec=5s
+ 
+[Install]
+WantedBy=multi-user.target

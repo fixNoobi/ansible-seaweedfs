@@ -1,0 +1,11 @@
+[Unit]
+Description=weed filer server of cluster
+ 
+[Service]
+EnvironmentFile=/etc/default/weed
+ExecStart=/usr/local/bin/weed filer $WEED_FILER_OPTS 
+Restart=always
+RestartSec=5s
+ 
+[Install]
+WantedBy=multi-user.target

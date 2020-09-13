@@ -1,0 +1,18 @@
+[Unit]
+Description=weed master server of cluster
+Wants=network-online.target
+After=network-online.target
+AssertFileIsExecutable=/usr/local/bin/weed
+
+[Service]
+EnvironmentFile=/etc/default/weed
+User=root
+Group=root
+ExecStart=/usr/local/bin/weed master $WEED_MASTER_OPTS
+Restart=always
+LimitNOFILE=65536
+TimeoutStopSec=infinity
+SendSIGKILL=no
+ 
+[Install]
+WantedBy=multi-user.target

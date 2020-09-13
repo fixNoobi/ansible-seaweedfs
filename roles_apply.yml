@@ -1,0 +1,19 @@
+---
+- name: Setup etcd
+  hosts: etcd-master
+  roles:
+    - etcd
+    - etcd-cluster
+  # environment:
+  #   EXAMPLE1: 123
+  #   EXAMPLE2: 1233
+
+- name: Setup base
+  hosts: all
+  roles:
+    # - node_exporter
+    - deploy_seaweeds
+  #  - postgres_exporter
+  # environment:
+  #   EXAMPLE1: 123
+  #   EXAMPLE2: 1233

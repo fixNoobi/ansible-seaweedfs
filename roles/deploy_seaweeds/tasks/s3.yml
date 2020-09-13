@@ -1,0 +1,19 @@
+---
+- name: SeaWeedFS | Remove service swfs-s3 | yum
+  file:
+    path: /etc/systemd/system/swfs-s3.service
+    state: absent
+  tags:
+    - prune-all
+  when: "'prune-all' in ansible_run_tags"
+
+- name: SeaWeedFS | Setup service swfs-s3 
+  template:
+    src: system/swfs-s3.service.j2
+    dest: "/etc/systemd/system/swfs-s3.service"
+    mode: 0700
+
+- name: SeaWeedFS | Create s3 config file [{{weed_folder}}/s3-credentials.json]
+  template: 
+    src: s3-credentials.json.j2
+    dest: "{{weed_folder}}/s3-credentials.json"

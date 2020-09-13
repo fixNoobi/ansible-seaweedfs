@@ -1,0 +1,37 @@
+---
+
+- name: Download file with check (sha256)
+  get_url:
+    url: "{{weed_large_url}}"
+    dest: /tmp/seaweed_{{weed_version}}.tar.gz
+
+- name: Unarchive a file that is already on the remote machine
+  unarchive:
+    src: /tmp/seaweed_{{weed_version}}.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: SeaWeedFS | Ensures Main dir exists [{{weed_folder}}]
+  file: 
+    path: "{{weed_folder}}"
+    state: directory
+
+- name: SeaWeedFS | Ensures Master dir exists [{{weed_master_folder}}]
+  file: 
+    path: "{{weed_master_folder}}"
+    state: directory
+
+- name: SeaWeedFS | Ensures Data dir exists [{{weed_data_folder}}]
+  file: 
+    path: "{{weed_data_folder}}"
+    state: directory
+
+- name: SeaWeedFS | Ensures Filer Data dir exists [{{weed_filer_folder}}]
+  file: 
+    path: "{{weed_filer_folder}}"
+    state: directory
+
+- name: SeaWeedFS | Create environment file
+  template: 
+    src: weed.env.j2
+    dest: "/etc/default/weed"

@@ -1,0 +1,79 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# $script = <<SCRIPT
+# apt-get update
+# apt-get install -y htop 
+# # sudo mv hosts /etc/hosts
+# # chmod 0600 /home/vagrant/.ssh/id_rsa
+# usermod -a -G vagrant ubuntu
+# cp -Rvf /home/vagrant/.ssh /home/ubuntu
+# chown -Rvf ubuntu /home/ubuntu
+# SCRIPT
+ENV["LC_ALL"] = "en_US.UTF-8"
+ENV["LOCALE"] = "en_US.UTF-8"
+
+cluster = {
+  "srv-stage01" => { :ip => "192.168.100.101",  :cpus => 1, :mem => 1024 },
+  "srv-stage02"  => { :ip => "192.168.100.102", :cpus => 1, :mem => 1024 },
+  "srv-stage03"  => { :ip => "192.168.100.103", :cpus => 1, :mem => 1024 }
+}
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/xenial64"
+  config.disksize.size = "5GB"
+
+  config.vm.box_check_update = false
+  check_guest_additions = true
+  functional_vboxsf = false
+
+  # always use vagrants insecure key
+  config.ssh.insert_key = false
+  # forward ssh agent to easily ssh into the different machines
+  config.ssh.forward_agent = true
+#  cluster.each_with_index do |machine,index|
+  cluster.each_with_index do |(hostname, info),index|
+    # server configuration
+#    config.vm.define machine[:hostname] do |node|
+    config.vm.define hostname do |node|
+ 
+      node.vm.network :private_network, ip: "#{info[:ip]}"
+      node.vm.hostname = hostname
+      node.vm.provision :shell, inline: "apt-get update && apt-get install -y python-minimal python3"
+      node.vm.provision :shell, :inline =>"
+      echo 'Copying ansible-vm public SSH Keys to the VM'
+      mkdir -p /home/vagrant/.ssh
+
+      chmod -R 600 /home/vagrant/.ssh/authorized_keys
+      echo 'Host 192.168.*.*' >> /home/vagrant/.ssh/config
+      echo 'StrictHostKeyChecking no' >> /home/vagrant/.ssh/config
+      echo 'UserKnownHostsFile /dev/null' >> /home/vagrant/.ssh/config
+      chmod -R 600 /home/vagrant/.ssh/config
+      ", privileged: false
+
+      ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+      node.vm.provision 'shell', inline: 'mkdir -p /root/.ssh'
+      node.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /root/.ssh/authorized_keys"
+      node.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys" , privileged: false
+
+      node.vm.provider "virtualbox" do |v|
+#         v.name = machine[:hostname]
+        v.name = hostname
+        v.memory = "1024"
+        v.cpus = 1   
+      end
+      
+      if index == cluster.size - 1
+        node.vm.provision "ansible" do |ansible|
+          ansible.verbose = "v"
+          ansible.become = true
+          ansible.become_user = "root"
+          ansible.compatibility_mode = "2.0"
+          ansible.playbook = "roles_apply.yml"
+          ansible.limit = 'all'
+          ansible.inventory_path = "hosts/servers"
+        end
+      end
+    end
+  end
+end

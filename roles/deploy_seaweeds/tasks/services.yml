@@ -1,0 +1,27 @@
+---
+- name: Remove service {{item}} | Seaweedfs
+  systemd:
+    enabled: no
+    state: stopped
+    daemon_reload: yes
+    name: "{{item}}"
+  with_items: "{{name_services}}"
+  tags:
+    - prune-all
+  when: "'prune-all' in ansible_run_tags"
+
+- name: Reload systemd daemon | Seaweedfs
+  systemd:
+    daemon_reload: yes
+  # tags:
+  #   - reload
+
+- name: Restart service {{item}} | Seaweedfs
+  systemd:
+    enabled: yes    
+    state: restarted
+    daemon_reload: yes
+    name: "{{item}}"
+  with_items: "{{name_services}}"
+  tags:
+    - reload

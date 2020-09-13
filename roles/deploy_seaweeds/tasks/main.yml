@@ -1,0 +1,28 @@
+---
+
+- include_tasks: prune.yml
+  when: "'prune-all' in ansible_run_tags"
+
+# - include_tasks: debug.yml
+
+- include_tasks: initial.yml
+
+- include_tasks: masters.yml
+  when: inventory_hostname in groups['master']
+
+- include_tasks: volumes.yml
+  when: inventory_hostname in groups['volumes']
+
+- include_tasks: filers.yml
+  when: inventory_hostname in groups['filer']
+
+- include_tasks: s3.yml
+  when: inventory_hostname in groups['s3']
+
+# - include_tasks: cron.yml
+#   when: inventory_hostname in groups['cron']
+
+- include_tasks: services.yml
+
+- include_tasks: finaly.yml
+  # tags: [deploy-install-dependence-prod] 

@@ -1,0 +1,28 @@
+weed_version: "1.99"
+weed_large_url: "https://github.com/chrislusf/seaweedfs/releases/download/{{weed_version}}/linux_amd64_large_disk.tar.gz"
+weed_url: "https://github.com/chrislusf/seaweedfs/releases/download/{{weed_version}}/linux_amd64.tar.gz"
+
+weed_folder:      "/etc/seaweedfs"
+weed_data_folder: "/mnt/s3/data/seaweedfs"
+weed_master_folder: "/var/seaweedfs/master"
+weed_filer_folder: "/var/seaweedfs/filer"
+
+weed_masters_port: 9333
+weed_masters_group: master
+etcd_masters_group: etcd-master 
+
+weed_volumes_port: 8080
+weed_filers_port: 8888
+weed_s3_port: 9000
+
+weed_volumes_count_max: 10000
+
+prometheus_push_gatway_server: "t01nbpprmth01.tkur.ebsbio.tech:9091"
+
+weed_replication: "010"
+
+name_services:
+  - swfs-master
+  - swfs-volume
+  - swfs-filer
+  - swfs-s3
